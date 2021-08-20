@@ -17,7 +17,7 @@ def add_new_movie(movie_name: str, locations_and_timings: dict):
                 MovieLocationsWithTimings.insert(movie_id=movie_id, location=location, timing=timing).execute()
 
     except peewee.IntegrityError:
-        return {"status": "failure", "message": "Movie already exists"}
+        return {"status": "failure", "message": "Movie already exists in the list"}
 
     except Exception as e:
         return {"status": "failure", "message": f'Error inserting locations or timings : {e}'}
@@ -104,6 +104,6 @@ def delete_movie_by_name(movie_name):
         Movies.get(Movies.movie_name == movie_name).delete_instance()
         return {"status": "success", "message": f'{movie_name} deleted successfully'}
     except peewee.DoesNotExist:
-        return {"status": "failure", "message": f'{movie_name} dose not exits in database'}
+        return {"status": "failure", "message": f'{movie_name} dose not exits in movie list'}
     except Exception as e:
         return {"status": "failure", "message": f'Error in deleting movie {movie_name} {e}'}

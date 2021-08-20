@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/') 
 def index():
-    return {"message": "Server is running"}
+    return {"message": "Movie-app server is running"}
 
 
 @app.route('/add_new_movie', methods=['POST'])
@@ -89,12 +89,11 @@ def migrate():
         print("Going to Drop tables...")
         database.db.drop_tables((src.models.Movies, src.models.MovieLocationsWithTimings))
         print("Tables dropped successfully")
-    print("Going to create tables")
+    print("Going to migrate database")
     database.db.create_tables((src.models.Movies, src.models.MovieLocationsWithTimings))
-    print("Tables created successfully")
-    return {"status": "success", "message": "Tables created successfully"}
+    print("Database migrated successfully")
+    return {"status": "success", "message": "Database migrated successfully"}
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=settings.SERVER_PORT, debug=False)
-    app.run()
