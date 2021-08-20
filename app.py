@@ -1,4 +1,5 @@
 from flask import Flask, request
+import json
 
 import src.models
 import settings
@@ -22,9 +23,21 @@ def insert_new_movie():
     :return:
     """
     movie_name = request.form.get('movie_name')
-    locations = request.form.get('locations').split(",")
-    timings = request.form.get('timings').split(",")
-    return add_new_movie(movie_name, locations, timings)
+    locations_and_timings = request.form.get('locations_and_timings')
+    none_values = []
+    if not movie_name:
+        none_values.append("movie_name")
+    if not locations_and_timings:
+        none_values.append("locations_and_timings")
+    if none_values:
+        return {"status": "failure", "message": f'{none_values} are required params'}
+    try:
+        locations_and_timings = json.loads(locations_and_timings)
+    except json.JSONDecodeError:
+        locations_and_timings = eval(locations_and_timings)
+    except Exception as e:
+        return {"status": "failure", "message": f'Unexpected error occured : {e}'}
+    return add_new_movie(movie_name, locations_and_timings)
 
 
 @app.route('/get_all_movies', methods=['GET'])
@@ -33,9 +46,10 @@ def get_all_movies():
     This is a view function for getting all the movies according on the search.
     :return:
     """
+    movie_name = request.args.get('movie_name')
     location = request.args.get('location')
     timing = request.args.get('timing')
-    return get_movies(location=location, timing=timing)
+    return get_movies(movie_name=movie_name, location=location, timing=timing)
 
 
 @app.route('/update_movie_details/<string:movie_name>', methods=['PUT'])
@@ -44,15 +58,19 @@ def edit_movie_details(movie_name):
     This is a view function for update movie details.
     """
     updated_movie_name = request.form.get('updated_name')
-    locations = request.form.get('locations')
-    timings = request.form.get('timings')
-    locations = locations.split(',') if locations else []
-    timings = timings.split(',') if timings else []
-    return update_movie_details(movie_name, updated_movie_name, locations=locations, timings=timings)
+    new_locations_and_timings = request.form.get('new_locations_and_timings')
+    if new_locations_and_timings:
+        try:
+            new_locations_and_timings = json.loads(new_locations_and_timings)
+        except json.JSONDecodeError:
+            new_locations_and_timings = eval(new_locations_and_timings)
+        except Exception as e:
+            return {"status": "failure", "message": f'Unexpected error occured : {e}'}
+    return update_movie_details(movie_name, updated_movie_name, new_locations_and_timings)
 
 
 @app.route('/delete_movie/<string:movie_name>', methods=['DELETE'])
-def delete_movie(movie_name):
+def delete_movie(movie_name: str):
     """
     This is a view function for delete movie api.
     """
@@ -61,7 +79,7 @@ def delete_movie(movie_name):
 
 @app.route('/recreate_tables')
 def recreate_tables():
-    all_tables = (src.models.Movies, src.models.MovieLocations, src.models.MovieTimings)
+    all_tables = (src.models.Movies, src.models.MovieLocationsWithTimings)
     database.db.drop_tables(all_tables)
     database.db.create_tables(all_tables)
     return {"status": "success", "message": "Tables recreated successfully"}
