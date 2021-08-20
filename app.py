@@ -56,6 +56,7 @@ def get_all_movies():
 def edit_movie_details(movie_name):
     """
     This is a view function for update movie details.
+    :return:
     """
     updated_movie_name = request.form.get('updated_name')
     new_locations_and_timings = request.form.get('new_locations_and_timings')
@@ -65,7 +66,7 @@ def edit_movie_details(movie_name):
         except json.JSONDecodeError:
             new_locations_and_timings = eval(new_locations_and_timings)
         except Exception as e:
-            return {"status": "failure", "message": f'Unexpected error occured : {e}'}
+            return {"status": "failure", "message": f'Unexpected error occurred : {e}'}
     return update_movie_details(movie_name, updated_movie_name, new_locations_and_timings)
 
 
@@ -73,17 +74,27 @@ def edit_movie_details(movie_name):
 def delete_movie(movie_name: str):
     """
     This is a view function for delete movie api.
+    :return:
     """
     return delete_movie_by_name(movie_name)
 
 
-@app.route('/recreate_tables')
-def recreate_tables():
-    all_tables = (src.models.Movies, src.models.MovieLocationsWithTimings)
-    database.db.drop_tables(all_tables)
-    database.db.create_tables(all_tables)
-    return {"status": "success", "message": "Tables recreated successfully"}
+@app.route('/migrate')
+def migrate():
+    """
+    This function is used to create all the tables in the database.
+    :return:
+    """
+    if settings.DROP_TABLES:
+        print("Going to Drop tables...")
+        database.db.drop_tables((src.models.Movies, src.models.MovieLocationsWithTimings))
+        print("Tables dropped successfully")
+    print("Going to create tables")
+    database.db.create_tables((src.models.Movies, src.models.MovieLocationsWithTimings))
+    print("Tables created successfully")
+    return {"status": "success", "message": "Tables created successfully"}
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=settings.SERVER_PORT, debug=False)
+    app.run()

@@ -7,8 +7,7 @@ def add_new_movie(movie_name: str, locations_and_timings: dict):
     """
     This function is used to insert new movie details into their respective tables.
     :param movie_name:
-    :param locations: list of locations
-    :param timings: list of timings
+    :param locations_and_timings:
     :return:
     """
     try:
@@ -75,8 +74,7 @@ def update_movie_details(movie_name, updated_name=None, new_locations_and_timing
     This Function is used to update the movie details.
     :param movie_name:
     :param updated_name:
-    :param timings:
-    :param locations:
+    :param new_locations_and_timings:
     :return:
     """
     try:

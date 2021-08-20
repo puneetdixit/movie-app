@@ -1,0 +1,9 @@
+ipython
+ipython-genutils
+Flask==2.0.1
+pandas
+MarkupSafe==2.0.1
+gunicorn==19.6.0
+PyMySQL==1.0.2
+peewee==3.14.4
+Pygments==2.9.0
