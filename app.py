@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import json
 
 import src.models
@@ -11,9 +11,10 @@ database = Database()
 app = Flask(__name__)
 
 
-@app.route('/') 
-def index():
-    return {"message": "Server is running"}
+
+@app.route('/docs', methods=['GET'])
+def get_docs():
+    return render_template('swaggerui.html')
 
 
 @app.route('/add_new_movie', methods=['POST'])
@@ -97,4 +98,4 @@ def migrate():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=settings.SERVER_PORT, debug=False)
-    app.run()
+    # app.run()
