@@ -36,7 +36,7 @@ def insert_new_movie():
     except json.JSONDecodeError:
         locations_and_timings = eval(locations_and_timings)
     except Exception as e:
-        return {"status": "failure", "message": f'Unexpected error occured : {e}'}
+        return {"status": "failure", "message": f'Unexpected error occurred : {e}'}
     return add_new_movie(movie_name, locations_and_timings)
 
 

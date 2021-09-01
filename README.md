@@ -1,4 +1,5 @@
-# movie-app
+# movie-app python backend
+
 This is a backend server for movie-app in Python3 language using Flask Framework. MySql as a 
 Database and Peewee ORM to communicate with the database.
 
@@ -11,10 +12,9 @@ To connect with database change in settings.py file accordingly.
 
     These are my credentials and where my database is hosted.
 
-This server is serving on Google Cloud Platform (GCP) https://movie-app-323508.el.r.appspot.com/ You can test it. Just 
-replace http://127.0.0.1:5000/ with above url.
+# Note: This server is deployed on Google Cloud Platform (GCP) https://movie-app-323508.el.r.appspot.com/ You can test it. Just replace http://127.0.0.1:5000/ with above url.
 
-You have are trying to run this on your machine, migrate data to your database using this API http://127.0.0.1:5000/migrate
+You have are trying to run this on your machine, migrate tables to your database using this API http://127.0.0.1:5000/migrate
 
 1. To view movies, timings, location
     This is a GET method.
